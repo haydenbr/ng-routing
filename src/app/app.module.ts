@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 
 // Imports for loading & configuring the in-memory web api
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { ProductData } from '../products/models/product-data';
+import { ProductData } from '../product/models/product-data';
 
 import { AppComponent } from './app.component';
 import { COMPONENTS } from './components';
@@ -13,7 +13,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 /* Feature Modules */
-import { ProductModule } from '../products';
+import { ProductModule } from '../product';
 import { MessageModule } from '../message';
 import { UserModule } from '../user';
 import { SharedModule } from '../shared';
