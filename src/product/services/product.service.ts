@@ -1,24 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 
 import { Product } from '../models';
 
+import { ProductDbService } from './product-db.service';
+
 @Injectable()
 export class ProductService {
-    private baseUrl = 'api/products';
+    private readonly throttle = 1000;
 
-    constructor(private http: Http) { }
+    constructor(private dbService: ProductDbService) {}
 
     getProducts(): Observable<Product[]> {
-        return this.http.get(this.baseUrl)
-            .pipe(
-                map(this.extractData),
-                tap(data => console.log('getProducts: ' + JSON.stringify(data))),
-                catchError(this.handleError)
-            );
+        return this.prepResponse(this.dbService.getProducts());
     }
 
     getProduct(id: number): Observable<Product> {
@@ -26,71 +22,26 @@ export class ProductService {
             return of(this.initializeProduct());
         }
 
-        const url = `${this.baseUrl}/${id}`;
-        return this.http.get(url)
-            .pipe(
-                map(this.extractData),
-                tap(data => console.log('getProduct: ' + JSON.stringify(data))),
-                catchError(this.handleError)
-            );
+        return this.prepResponse(this.dbService.getProduct(id));
     }
 
-    deleteProduct(id: number): Observable<Response> {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({ headers: headers });
-
-        const url = `${this.baseUrl}/${id}`;
-        return this.http.delete(url, options)
-            .pipe(
-                tap(data => console.log('deleteProduct: ' + JSON.stringify(data))),
-                catchError(this.handleError)
-            );
+    deleteProduct(id: number): Observable<any> {
+        return this.prepResponse(this.dbService.deleteProduct(id));
     }
 
     saveProduct(product: Product): Observable<Product> {
-        const headers = new Headers({ 'Content-Type': 'application/json' });
-        const options = new RequestOptions({ headers: headers });
-
         if (product.id === 0) {
-            return this.createProduct(product, options);
+            return this.prepResponse(this.dbService.createProduct(product));
         }
-        return this.updateProduct(product, options);
+
+        return this.prepResponse(this.dbService.updateProduct(product));
     }
 
-    private createProduct(product: Product, options: RequestOptions): Observable<Product> {
-        product.id = undefined;
-        return this.http.post(this.baseUrl, product, options)
-            .pipe(
-                map(this.extractData),
-                tap(data => console.log('createProduct: ' + JSON.stringify(data))),
-                catchError(this.handleError)
-            );
-    }
-
-    private updateProduct(product: Product, options: RequestOptions): Observable<Product> {
-        const url = `${this.baseUrl}/${product.id}`;
-        return this.http.put(url, product, options)
-            .pipe(
-                map(() => product),
-                tap(data => console.log('updateProduct: ' + JSON.stringify(data))),
-                catchError(this.handleError)
-            );
-    }
-
-    private extractData(response: Response) {
-        const body = response.json();
-        return body.data || {};
-    }
-
-    private handleError(error: Response): Observable<any> {
-        // in a real world app, we may send the server to some remote logging infrastructure
-        // instead of just logging it to the console
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+    private prepResponse(data: any) {
+        return of(data).pipe(delay(this.throttle));
     }
 
     initializeProduct(): Product {
-        // Return an initialized object
         return {
             id: 0,
             productName: null,

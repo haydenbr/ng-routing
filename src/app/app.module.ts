@@ -3,10 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
-// Imports for loading & configuring the in-memory web api
-import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { ProductData } from '../product/models/product-data';
-
 import { AppComponent } from './app.component';
 import { COMPONENTS } from './components';
 import { WelcomeComponent } from './components/welcome/welcome.component';
@@ -27,11 +23,10 @@ import { SharedModule } from '../shared';
       { path: '**', component: PageNotFoundComponent }
     ], { useHash: true }),
     HttpModule,
-    InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 }),
     SharedModule,
     ProductModule,
     UserModule,
-    MessageModule
+    MessageModule,
   ],
   declarations: [ AppComponent, COMPONENTS ],
   bootstrap: [ AppComponent ]
