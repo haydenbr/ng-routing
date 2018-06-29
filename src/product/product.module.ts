@@ -11,7 +11,7 @@ import { SERVICES } from './services';
 
 @NgModule({
   imports: [
-    InMemoryWebApiModule.forFeature(ProductData, { delay: 1000 }),
+    InMemoryWebApiModule.forRoot(ProductData, { delay: 1000 }),
     SharedModule,
     RouterModule.forChild([
       { path: 'products', component: ProductListComponent }
