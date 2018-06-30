@@ -46,7 +46,7 @@
                                  [style.width.px]="imageWidth" 
                                  [style.margin.px]="imageMargin">
                         </td>
-                        <td><a>
+                        <td><a (click)="onProductClick(product)">
                             {{product.productName}}
                             </a>
                         </td>
@@ -58,7 +58,7 @@
                             </ai-star>
                        </td>
                        <td>
-                            <a class="btn btn-primary">
+                            <a class="btn btn-primary" (click)="onEditClick(product)">
                                 Edit
                             </a>
                         </td>

@@ -9,7 +9,7 @@ import { ProductDbService } from './product-db.service';
 
 @Injectable()
 export class ProductService {
-    private readonly throttle = 1000;
+    private readonly throttle = 500;
 
     constructor(private dbService: ProductDbService) {}
 

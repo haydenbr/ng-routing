@@ -1,21 +1,42 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { catchError, map, takeUntil, switchMap } from 'rxjs/operators';
 
 import { Product } from '../../models';
 import { ProductService } from '../../services';
 
 @Component({
-    templateUrl: 'product-detail.component.html'
+		templateUrl: 'product-detail.component.html'
 })
-export class ProductDetailComponent {
-    pageTitle = 'Product Detail';
-    product: Product;
-    errorMessage: string;
+export class ProductDetailComponent implements OnInit, OnDestroy {
+		pageTitle = 'Product Detail';
+		product: Product;
+		errorMessage: string;
+		private killSubs = new Subject();
 
-    constructor(private productService: ProductService) { }
+		constructor(
+				private productService: ProductService,
+				private router: Router,
+				private route: ActivatedRoute
+		) {}
 
-    getProduct(id: number) {
-        this.productService.getProduct(id).subscribe(
-            product => this.product = product,
-            error => this.errorMessage = <any>error);
-    }
+		ngOnInit() {
+				this.route.params
+						.pipe(
+								takeUntil(this.killSubs),
+								map(params => Number(params.id)),
+								switchMap(id => this.productService.getProduct(id))
+						)
+						.subscribe((product) => this.product = product || this.product);
+		}
+
+		ngOnDestroy() {
+				this.killSubs.next();
+		}
+
+		onEditClick() {
+				this.router.navigate(['/products', this.product.id, 'edit']);
+		}
 }

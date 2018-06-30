@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared';
 
-import { COMPONENTS, ProductListComponent } from './components';
+import { COMPONENTS, ProductListComponent, ProductDetailComponent, ProductEditComponent } from './components';
 import { DIRECTIVES } from './directives';
 import { SERVICES } from './services';
 
@@ -11,7 +11,9 @@ import { SERVICES } from './services';
   imports: [
     SharedModule,
     RouterModule.forChild([
-      { path: 'products', component: ProductListComponent }
+      { path: 'products', component: ProductListComponent },
+      { path: 'products/:id', component: ProductDetailComponent },
+      { path: 'products/:id/edit', component: ProductEditComponent },
     ])
   ],
   declarations: [ COMPONENTS, DIRECTIVES ],

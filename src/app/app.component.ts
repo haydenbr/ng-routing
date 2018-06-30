@@ -33,4 +33,8 @@ export class AppComponent {
     onLoginClick() {
         this.router.navigate(['/login']);
     }
+
+    onAddProductClick() {
+        this.router.navigate(['/products', 0, 'edit']);
+    }
 }

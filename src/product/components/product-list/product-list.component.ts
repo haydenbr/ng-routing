@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Product } from '../../models';
 import { ProductService } from '../../services';
@@ -17,7 +18,10 @@ export class ProductListComponent implements OnInit {
 
     products: Product[];
 
-    constructor(private productService: ProductService) { }
+    constructor(
+        private productService: ProductService,
+        private router: Router
+    ) { }
 
     toggleImage(): void {
         this.showImage = !this.showImage;
@@ -27,5 +31,13 @@ export class ProductListComponent implements OnInit {
         this.productService.getProducts()
                 .subscribe(products => this.products = products,
                            error => this.errorMessage = <any>error);
+    }
+
+    onProductClick(product: Product) {
+        this.router.navigate(['/products', product.id]);
+    }
+
+    onEditClick(product: Product) {
+        this.router.navigate(['/products', product.id, 'edit']);
     }
 }
