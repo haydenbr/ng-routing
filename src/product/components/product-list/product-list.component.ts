@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { Product } from '../../models';
 import { ProductService } from '../../services';
@@ -8,15 +12,16 @@ import { ProductService } from '../../services';
   templateUrl: 'product-list.component.html',
   styleUrls: ['product-list.component.scss']
 })
-export class ProductListComponent implements OnInit {
+export class ProductListComponent implements OnInit, OnDestroy {
   pageTitle = 'Product List';
   imageWidth = 50;
   imageMargin = 2;
   showImage = false;
-  listFilter: string;
+  searchTerm: string;
   errorMessage: string;
-
   products: Product[];
+  searchTermFormControl = new FormControl();
+  killSubs = new Subject();
 
   constructor(private productService: ProductService, private router: Router) {}
 
@@ -31,6 +36,14 @@ export class ProductListComponent implements OnInit {
         products => (this.products = products),
         error => (this.errorMessage = <any>error)
       );
+
+    this.searchTermFormControl.valueChanges
+      .pipe(takeUntil(this.killSubs))
+      .subscribe((value) => this.searchTerm = value);
+  }
+
+  ngOnDestroy() {
+    this.killSubs.next();
   }
 
   onProductClick(product: Product) {
