@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { MessageService } from '../../../message/services';
+import { Subject } from 'rxjs';
+import { takeUntil, map, switchMap, catchError } from 'rxjs/operators';
 
+import { MessageService } from '../../../message/services';
 import { Product } from '../../models';
 import { ProductService } from '../../services';
 
@@ -10,29 +12,38 @@ import { ProductService } from '../../services';
 	templateUrl: 'product-edit.component.html',
 	styleUrls: ['product-edit.component.scss']
 })
-export class ProductEditComponent {
+export class ProductEditComponent implements OnInit, OnDestroy {
 	pageTitle = 'Product Edit';
 	errorMessage: string;
-
 	product: Product;
+	private killSubs = new Subject();
 
 	constructor(
-	    private productService: ProductService,
-		private messageService: MessageService
-	) { }
+	  private productService: ProductService,
+		private messageService: MessageService,
+		private route: ActivatedRoute,
+		private router: Router
+	) {}
 
-	getProduct(id: number): void {
-		this.productService.getProduct(id)
-			.subscribe(
-				(product: Product) => this.onProductRetrieved(product),
-				(error: any) => this.errorMessage = <any>error
-			);
+	ngOnInit() {
+		this.route.params.pipe(
+			takeUntil(this.killSubs),
+			map(params => Number(params.id)),
+			switchMap(id => this.productService.getProduct(id)),
+			catchError((error: any) => this.errorMessage = error)
+		)
+		.subscribe((product: Product) => {
+			this.product = product || this.product;
+			this.setPageTitle(this.product.id);
+		});
 	}
 
-	onProductRetrieved(product: Product): void {
-		this.product = product;
+	ngOnDestroy() {
+		this.killSubs.next();
+	}
 
-		if (this.product.id === 0) {
+	setPageTitle(productId: number): void {
+		if (productId === 0) {
 			this.pageTitle = 'Add Product';
 		} else {
 			this.pageTitle = `Edit Product: ${this.product.productName}`;

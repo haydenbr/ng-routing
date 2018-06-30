@@ -23,13 +23,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.route.params
-      .pipe(
-        takeUntil(this.killSubs),
-        map(params => Number(params.id)),
-        switchMap(id => this.productService.getProduct(id))
-      )
-      .subscribe(product => (this.product = product || this.product));
+    this.route.params.pipe(
+			takeUntil(this.killSubs),
+			map(params => Number(params.id)),
+			switchMap(id => this.productService.getProduct(id))
+		)
+		.subscribe(product => (this.product = product || this.product));
   }
 
   ngOnDestroy() {
