@@ -17,12 +17,13 @@ export class ProductDbService {
 	deleteProduct(id: number): Product {
 		const product = this.getProduct(id);
 
-		this.products = this.products.filter(p => p.id === id);
+		this.products = this.products.filter(p => p.id !== id);
 
 		return product;
 	}
 
 	createProduct(product: Product): Product {
+		product.id = this.nextProductId;
 		this.products = this.products.concat(product);
 		return product;
 	}
@@ -30,5 +31,10 @@ export class ProductDbService {
 	updateProduct(product: Product): Product {
 		this.products = this.products.map(p => p.id === product.id ? product : p);
 		return product;
+	}
+
+	get nextProductId() {
+		const ids = this.products.map(p => p.id);
+		return Math.max(...ids) + 1;
 	}
 }

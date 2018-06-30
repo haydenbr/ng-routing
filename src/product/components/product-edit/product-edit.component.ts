@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -22,7 +23,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	  private productService: ProductService,
 		private messageService: MessageService,
 		private route: ActivatedRoute,
-		private router: Router
+		private router: Router,
+		private location: Location
 	) {}
 
 	ngOnInit() {
@@ -50,7 +52,46 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	deleteProduct(): void {
+	onCancelClick() {
+		this.goBack();
+	}
+
+	onSaveClick() {
+		this.productService
+			.saveProduct(this.product)
+			.subscribe(() => this.onEditComplete(`${this.product.productName} was saved`));
+	}
+
+	onDeleteClick() {
+		if (this.confirmDelete()) {
+			this.productService
+				.deleteProduct(this.product.id)
+				.subscribe(() => this.onEditComplete(`${this.product.productName} was deleted`));
+		}
+	}
+
+	onEditComplete(message) {
+		this.messageService.addMessage(message);
+		this.goBackToProducts();
+	}
+
+	private goBack() {
+		this.location.back();
+	}
+
+	private goBackToProducts() {
+		this.router.navigate(['/products']);
+	}
+
+	confirmDelete() {
+		return confirm(`Really delete ${this.product.productName}?`);
+	}
+
+	get canDelete() {
+		return this.product && this.product.id && this.product.id !== 0;
+	}
+
+	deleteProductBob(): void {
 		if (this.product.id === 0) {
 			// Don't delete, it was never saved.
 			this.onSaveComplete();

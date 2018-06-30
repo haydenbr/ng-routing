@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, take } from 'rxjs/operators';
 
 import { Product } from '../models';
 
@@ -38,7 +38,10 @@ export class ProductService {
   }
 
   private prepResponse(data: any) {
-    return of(data).pipe(delay(this.throttle));
+    return of(data).pipe(
+			delay(this.throttle),
+			take(1)
+		);
   }
 
   initializeProduct(): Product {

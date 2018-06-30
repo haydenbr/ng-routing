@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -17,6 +18,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   private killSubs = new Subject();
 
   constructor(
+		private location: Location,
     private productService: ProductService,
     private router: Router,
     private route: ActivatedRoute
@@ -26,9 +28,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.route.params.pipe(
 			takeUntil(this.killSubs),
 			map(params => Number(params.id)),
-			switchMap(id => this.productService.getProduct(id))
+			switchMap(id => this.productService.getProduct(id)),
+			catchError((error: any) => this.errorMessage = error)
 		)
-		.subscribe(product => (this.product = product || this.product));
+		.subscribe((product: Product) => this.product = product || this.product);
   }
 
   ngOnDestroy() {
@@ -36,7 +39,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 	}
 
 	onBackClick() {
-		this.router.navigate(['/products']);
+		this.location.back();
 	}
 
   onEditClick() {
