@@ -14,7 +14,6 @@ import { ProductService } from '../../services';
 	styleUrls: ['product-edit.component.scss']
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
-	pageTitle = 'Product Edit';
 	errorMessage: string;
 	product: Product;
 	private killSubs = new Subject();
@@ -28,15 +27,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit() {
-		this.route.params.pipe(
+		this.route.paramMap.pipe(
 			takeUntil(this.killSubs),
-			map(params => Number(params.id)),
+			map(params => Number(params.get('id'))),
 			switchMap(id => this.productService.getProduct(id)),
 			catchError((error: any) => this.errorMessage = error)
 		)
 		.subscribe((product: Product) => {
 			this.product = product || this.product;
-			this.setPageTitle(this.product.id);
 		});
 	}
 
@@ -44,12 +42,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		this.killSubs.next();
 	}
 
-	setPageTitle(productId: number): void {
-		if (productId === 0) {
-			this.pageTitle = 'Add Product';
-		} else {
-			this.pageTitle = `Edit Product: ${this.product.productName}`;
-		}
+	get pageTitle() {
+		return this.product &&
+			(this.product.id ? `Edit Product: ${this.product.productName}` : 'Add Product');
 	}
 
 	onCancelClick() {
