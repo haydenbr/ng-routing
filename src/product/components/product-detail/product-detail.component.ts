@@ -34,7 +34,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.killSubs.next();
-  }
+	}
+
+	onBackClick() {
+		this.router.navigate(['/products']);
+	}
 
   onEditClick() {
     this.router.navigate(['/products', this.product.id, 'edit']);
