@@ -15,5 +15,22 @@ export class AppComponent {
     logOut(): void {
         this.authService.logout();
         console.log('Log out');
+        this.navToHome();
+    }
+
+    onHomeClick() {
+        this.navToHome();
+    }
+
+    private navToHome() {
+        this.router.navigate(['/welcome']);
+    }
+
+    onProductsClick() {
+        this.router.navigate(['/products']);
+    }
+
+    onLoginClick() {
+        this.router.navigate(['/login']);
     }
 }
