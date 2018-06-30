@@ -23,18 +23,18 @@ export class AppComponent {
   }
 
   private navToHome() {
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['welcome']);
   }
 
   onProductsClick() {
-    this.router.navigate(['/products']);
+    this.router.navigate(['products']);
   }
 
   onLoginClick() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['login']);
   }
 
   onAddProductClick() {
-    this.router.navigate(['/products', 0, 'edit']);
+    this.router.navigate(['products', 0, 'edit']);
   }
 }

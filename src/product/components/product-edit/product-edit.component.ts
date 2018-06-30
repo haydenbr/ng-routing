@@ -75,7 +75,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	}
 
 	private goBackToProducts() {
-		this.router.navigate(['/products']);
+		this.router.navigate(['products']);
 	}
 
 	confirmDelete() {

@@ -34,10 +34,10 @@ export class ProductListComponent implements OnInit {
   }
 
   onProductClick(product: Product) {
-    this.router.navigate(['/products', product.id]);
+    this.router.navigate(['products', product.id]);
   }
 
   onEditClick(product: Product) {
-    this.router.navigate(['/products', product.id, 'edit']);
+    this.router.navigate(['products', product.id, 'edit']);
   }
 }

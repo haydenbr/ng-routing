@@ -18,7 +18,7 @@ export class LoginComponent {
       const userName = loginForm.form.value.userName;
       const password = loginForm.form.value.password;
       this.authService.login(userName, password);
-      this.router.navigate(['/products']);
+      this.router.navigate(['products']);
 
       // Navigate to the Product List page after log in.
     } else {
@@ -27,6 +27,6 @@ export class LoginComponent {
   }
 
   onCancelClick() {
-    this.router.navigate(['/welcome']);
+    this.router.navigate(['welcome']);
   }
 }
