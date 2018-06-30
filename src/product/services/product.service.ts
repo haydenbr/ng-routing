@@ -9,50 +9,50 @@ import { ProductDbService } from './product-db.service';
 
 @Injectable()
 export class ProductService {
-    private readonly throttle = 500;
+  private readonly throttle = 500;
 
-    constructor(private dbService: ProductDbService) {}
+  constructor(private dbService: ProductDbService) {}
 
-    getProducts(): Observable<Product[]> {
-        return this.prepResponse(this.dbService.getProducts());
+  getProducts(): Observable<Product[]> {
+    return this.prepResponse(this.dbService.getProducts());
+  }
+
+  getProduct(id: number): Observable<Product> {
+    if (id === 0) {
+      return of(this.initializeProduct());
     }
 
-    getProduct(id: number): Observable<Product> {
-        if (id === 0) {
-            return of(this.initializeProduct());
-        }
+    return this.prepResponse(this.dbService.getProduct(id));
+  }
 
-        return this.prepResponse(this.dbService.getProduct(id));
+  deleteProduct(id: number): Observable<any> {
+    return this.prepResponse(this.dbService.deleteProduct(id));
+  }
+
+  saveProduct(product: Product): Observable<Product> {
+    if (product.id === 0) {
+      return this.prepResponse(this.dbService.createProduct(product));
     }
 
-    deleteProduct(id: number): Observable<any> {
-        return this.prepResponse(this.dbService.deleteProduct(id));
-    }
+    return this.prepResponse(this.dbService.updateProduct(product));
+  }
 
-    saveProduct(product: Product): Observable<Product> {
-        if (product.id === 0) {
-            return this.prepResponse(this.dbService.createProduct(product));
-        }
+  private prepResponse(data: any) {
+    return of(data).pipe(delay(this.throttle));
+  }
 
-        return this.prepResponse(this.dbService.updateProduct(product));
-    }
-
-    private prepResponse(data: any) {
-        return of(data).pipe(delay(this.throttle));
-    }
-
-    initializeProduct(): Product {
-        return {
-            id: 0,
-            productName: null,
-            productCode: null,
-            category: null,
-            tags: [],
-            releaseDate: null,
-            price: null,
-            description: null,
-            starRating: null,
-            imageUrl: null
-        };
-    }
+  initializeProduct(): Product {
+    return {
+      id: 0,
+      productName: null,
+      productCode: null,
+      category: null,
+      tags: [],
+      releaseDate: null,
+      price: null,
+      description: null,
+      starRating: null,
+      imageUrl: null
+    };
+  }
 }
