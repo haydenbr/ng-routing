@@ -3,14 +3,13 @@ import { RouterModule, Route } from '@angular/router';
 
 import { SharedModule } from '../shared';
 
+import { COMPONENTS, ProductEditInfoComponent, ProductEditTagsComponent } from './components';
 import {
-	COMPONENTS,
-	ProductListComponent,
+	CONTAINERS,
 	ProductDetailComponent,
 	ProductEditComponent,
-	ProductEditInfoComponent,
-	ProductEditTagsComponent
-} from './components';
+	ProductListComponent
+} from './containers';
 import { DIRECTIVES } from './directives';
 import { SERVICES, ProductResolverService } from './services';
 
@@ -24,13 +23,18 @@ const routes: Route[] = [
 	{
 		path: 'products/:id/edit',
 		component: ProductEditComponent,
-		resolve: { product: ProductResolverService }
+		resolve: { product: ProductResolverService },
+		children: [
+			{ path: '', redirectTo: 'info', pathMatch: 'full' },
+			{ path: 'info', component: ProductEditInfoComponent },
+			{ path: 'tags', component: ProductEditTagsComponent }
+		]
 	}
 ];
 
 @NgModule({
 	imports: [SharedModule, RouterModule.forChild(routes)],
-	declarations: [COMPONENTS, DIRECTIVES],
+	declarations: [COMPONENTS, CONTAINERS, DIRECTIVES],
 	providers: SERVICES
 })
 export class ProductModule {}

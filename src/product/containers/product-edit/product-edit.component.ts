@@ -19,7 +19,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	private killSubs = new Subject();
 
 	constructor(
-	  private productService: ProductService,
+		private productService: ProductService,
 		private messageService: MessageService,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -27,13 +27,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit() {
-    this.route.data
-      .pipe(
-        takeUntil(this.killSubs),
-        map(data => data.product),
-        filter(p => !!p)
-      )
-      .subscribe(p => this.product = p);
+		this.route.data
+			.pipe(
+				takeUntil(this.killSubs),
+				map((data) => data.product),
+				filter((p) => !!p)
+			)
+			.subscribe((p) => (this.product = p));
 	}
 
 	ngOnDestroy() {
@@ -41,8 +41,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	}
 
 	get pageTitle() {
-		return this.product &&
-			(this.product.id ? `Edit Product: ${this.product.productName}` : 'Add Product');
+		return (
+			this.product &&
+			(this.product.id ? `Edit Product: ${this.product.productName}` : 'Add Product')
+		);
 	}
 
 	onCancelClick() {
@@ -88,12 +90,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		if (this.product.id === 0) {
 			// Don't delete, it was never saved.
 			this.onSaveComplete();
-	   } else {
+		} else {
 			if (confirm(`Really delete the product: ${this.product.productName}?`)) {
-				this.productService.deleteProduct(this.product.id)
+				this.productService
+					.deleteProduct(this.product.id)
 					.subscribe(
 						() => this.onSaveComplete(`${this.product.productName} was deleted`),
-						(error: any) => this.errorMessage = <any>error
+						(error: any) => (this.errorMessage = <any>error)
 					);
 			}
 		}
@@ -101,10 +104,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
 	saveProduct(): void {
 		if (true === true) {
-			this.productService.saveProduct(this.product)
+			this.productService
+				.saveProduct(this.product)
 				.subscribe(
 					() => this.onSaveComplete(`${this.product.productName} was saved`),
-					(error: any) => this.errorMessage = <any>error
+					(error: any) => (this.errorMessage = <any>error)
 				);
 		} else {
 			this.errorMessage = 'Please correct the validation errors.';
@@ -117,5 +121,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 		}
 
 		// Navigate back to the product list
+	}
+
+	onBasicInfoClick() {
+		this.router.navigate(['info'], { relativeTo: this.route });
+	}
+
+	onSearchTagsClick() {
+		this.router.navigate(['tags'], { relativeTo: this.route });
 	}
 }
