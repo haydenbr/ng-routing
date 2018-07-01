@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
-import { takeUntil, map, switchMap, catchError } from 'rxjs/operators';
+import { takeUntil, map, filter } from 'rxjs/operators';
 
 import { MessageService } from '../../../message/services';
 import { Product } from '../../models';
@@ -27,15 +27,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	) {}
 
 	ngOnInit() {
-		this.route.paramMap.pipe(
-			takeUntil(this.killSubs),
-			map(params => Number(params.get('id'))),
-			switchMap(id => this.productService.getProduct(id)),
-			catchError((error: any) => this.errorMessage = error)
-		)
-		.subscribe((product: Product) => {
-			this.product = product || this.product;
-		});
+    this.route.data
+      .pipe(
+        takeUntil(this.killSubs),
+        map(data => data.product),
+        filter(p => !!p)
+      )
+      .subscribe(p => this.product = p);
 	}
 
 	ngOnDestroy() {

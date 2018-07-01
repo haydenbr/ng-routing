@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +14,7 @@ import { ProductService } from '../../services';
   styleUrls: ['product-list.component.scss']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
-  pageTitle = 'Product List';
+  pageTitle: string;
   imageWidth = 50;
   imageMargin = 2;
   showImage = false;
@@ -23,27 +24,36 @@ export class ProductListComponent implements OnInit, OnDestroy {
   searchTermFormControl = new FormControl();
   killSubs = new Subject();
 
-  constructor(private productService: ProductService, private router: Router) {}
-
-  toggleImage(): void {
-    this.showImage = !this.showImage;
-  }
+  constructor(
+    private location: Location,
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.pageTitle = this.route.snapshot.data.pageTitle;
+    this.getProducts();
+    this.initForControls();
+  }
+
+  ngOnDestroy() {
+    this.killSubs.next();
+  }
+
+  getProducts() {
     this.productService
       .getProducts()
       .subscribe(
         products => (this.products = products),
         error => (this.errorMessage = <any>error)
       );
+  }
 
+  initForControls() {
     this.searchTermFormControl.valueChanges
       .pipe(takeUntil(this.killSubs))
       .subscribe((value) => this.searchTerm = value);
-  }
-
-  ngOnDestroy() {
-    this.killSubs.next();
   }
 
   onProductClick(product: Product) {
@@ -52,5 +62,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   onEditClick(product: Product) {
     this.router.navigate(['products', product.id, 'edit']);
+  }
+
+  toggleImage(): void {
+    this.showImage = !this.showImage;
   }
 }
