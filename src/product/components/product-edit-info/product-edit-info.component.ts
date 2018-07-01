@@ -23,6 +23,11 @@ export class ProductEditInfoComponent implements OnInit {
 				map((data) => data.product),
 				filter((p) => !!p)
 			)
-			.subscribe((p) => (this.product = p));
+			.subscribe((p) => {
+				this.product = p;
+				if (this.productForm) {
+					this.productForm.reset();
+				}
+			});
 	}
 }
