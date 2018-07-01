@@ -7,13 +7,8 @@ import { COMPONENTS, LoginComponent } from './components';
 import { SERVICES } from './services';
 
 @NgModule({
-  imports: [
-    SharedModule,
-    RouterModule.forChild([
-      { path: 'login', component: LoginComponent }
-    ])
-  ],
-  declarations: COMPONENTS,
-  providers: SERVICES
+	imports: [SharedModule, RouterModule.forChild([{ path: 'login', component: LoginComponent }])],
+	declarations: COMPONENTS,
+	providers: SERVICES
 })
-export class UserModule { }
+export class UserModule {}

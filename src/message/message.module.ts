@@ -6,8 +6,8 @@ import { COMPONENTS } from './components';
 import { SERVICES } from './services';
 
 @NgModule({
-  imports: [SharedModule],
-  declarations: COMPONENTS,
-  providers: SERVICES
+	imports: [SharedModule],
+	declarations: COMPONENTS,
+	providers: SERVICES
 })
 export class MessageModule {}

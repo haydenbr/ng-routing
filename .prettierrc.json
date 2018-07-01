@@ -1,0 +1,7 @@
+{
+	"useTabs": true,
+	"singleQuote": true,
+	"arrowParens": "always",
+	"filepath": "./src/main.ts",
+	"printWidth": 100
+}

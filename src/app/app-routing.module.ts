@@ -10,9 +10,7 @@ const ROUTES: Routes = [
 ];
 
 @NgModule({
-	imports: [
-    RouterModule.forRoot(ROUTES, { useHash: true })
-	],
-	exports: [RouterModule],
+	imports: [RouterModule.forRoot(ROUTES, { useHash: true })],
+	exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
