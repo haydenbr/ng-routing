@@ -14,20 +14,29 @@ import { DIRECTIVES } from './directives';
 import { SERVICES, ProductResolverService } from './services';
 
 const routes: Route[] = [
-	{ path: 'products', component: ProductListComponent, data: { pageTitle: 'Product List' } },
 	{
-		path: 'products/:id',
-		component: ProductDetailComponent,
-		resolve: { product: ProductResolverService }
-	},
-	{
-		path: 'products/:id/edit',
-		component: ProductEditComponent,
-		resolve: { product: ProductResolverService },
+		path: 'products',
 		children: [
-			{ path: '', redirectTo: 'info', pathMatch: 'full' },
-			{ path: 'info', component: ProductEditInfoComponent },
-			{ path: 'tags', component: ProductEditTagsComponent }
+			{
+				path: '',
+				component: ProductListComponent,
+				data: { pageTitle: 'Product List' }
+			},
+			{
+				path: ':id',
+				component: ProductDetailComponent,
+				resolve: { product: ProductResolverService }
+			},
+			{
+				path: ':id/edit',
+				component: ProductEditComponent,
+				resolve: { product: ProductResolverService },
+				children: [
+					{ path: '', redirectTo: 'info', pathMatch: 'full' },
+					{ path: 'info', component: ProductEditInfoComponent },
+					{ path: 'tags', component: ProductEditTagsComponent }
+				]
+			}
 		]
 	}
 ];
