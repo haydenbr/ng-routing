@@ -130,4 +130,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 	onSearchTagsClick() {
 		this.router.navigate(['tags'], { relativeTo: this.route });
 	}
+
+	isRouteActive(route: string) {
+		console.log(this.route.snapshot);
+	}
 }

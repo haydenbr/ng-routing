@@ -5,8 +5,8 @@
 
     <div class="panel-body" *ngIf="product">
         <div class="wizard">
-            <a (click)="onBasicInfoClick()">Basic Information</a>
-            <a (click)="onSearchTagsClick()">Search Tags</a>
+            <a routerLink="info" routerLinkActive="active">Basic Information</a>
+            <a routerLink="tags" routerLinkActive="active">Search Tags</a>
         </div>
     </div>
 
