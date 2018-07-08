@@ -12,10 +12,12 @@ import {
 } from './containers';
 import { DIRECTIVES } from './directives';
 import { SERVICES, ProductResolverService } from './services';
+import { AuthGuard } from '../user/guards';
 
 const routes: Route[] = [
 	{
 		path: 'products',
+		canActivate: [AuthGuard],
 		children: [
 			{
 				path: '',
