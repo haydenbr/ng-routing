@@ -8,6 +8,7 @@ import {
 	NavigationCancel
 } from '@angular/router';
 
+import { MessageService } from '../message/services';
 import { AuthService } from '../user/services/auth.service';
 
 @Component({
@@ -18,7 +19,11 @@ export class AppComponent {
 	pageTitle = 'Acme Product Management';
 	private loading = true;
 
-	constructor(private authService: AuthService, private router: Router) {
+	constructor(
+		private authService: AuthService,
+		private messageSvc: MessageService,
+		private router: Router
+	) {
 		this.router.events.subscribe((event) => this.checkRouterEvent(event));
 	}
 
@@ -50,5 +55,15 @@ export class AppComponent {
 
 	onAddProductClick() {
 		this.router.navigate(['products', 0, 'edit']);
+	}
+
+	hideMessages() {
+		this.router.navigate([{ outlets: { popup: null } }]);
+		this.messageSvc.visible = false;
+	}
+
+	showMessages() {
+		this.router.navigate([{ outlets: { popup: 'messages' } }]);
+		this.messageSvc.visible = true;
 	}
 }

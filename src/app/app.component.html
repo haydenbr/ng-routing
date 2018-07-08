@@ -18,9 +18,16 @@
                 <li *ngIf="authService.isLoggedIn()">
                     <a>Welcome {{ authService.currentUser.userName }}</a>
                 </li>
-                <li>
-                    <a>Show Messages</a>
-                </li>
+                <li *ngIf="!messageSvc.visible">
+									<a (click)="showMessages()">
+										Show Messages
+									</a>
+								</li>
+                <li *ngIf="messageSvc.visible">
+									<a (click)="hideMessages()">
+										Hide Messages
+									</a>
+								</li>
                 <li *ngIf="!authService.isLoggedIn()">
                     <a (click)="onLoginClick()">Log In</a>
                 </li>
@@ -31,6 +38,13 @@
         </div>
     </nav>
     <div class="container">
-        <router-outlet></router-outlet>
+        <div class="row">
+					<div class="col-xs-10">
+						<router-outlet></router-outlet>
+					</div>
+					<div class="col-xs-2">
+						<router-outlet name="popup"></router-outlet>
+					</div>
+				</div>
     </div>
 </div>
