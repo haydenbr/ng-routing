@@ -6,21 +6,12 @@ import { AppComponent } from './app.component';
 import { COMPONENTS } from './components';
 import { AppRoutingModule } from './app-routing.module';
 
-import { ProductModule } from '../product';
 import { MessageModule } from '../message';
 import { UserModule } from '../user';
 import { SharedModule } from '../shared';
 
 @NgModule({
-	imports: [
-		BrowserModule,
-		HttpModule,
-		SharedModule,
-		ProductModule,
-		UserModule,
-		MessageModule,
-		AppRoutingModule
-	],
+	imports: [BrowserModule, HttpModule, SharedModule, UserModule, MessageModule, AppRoutingModule],
 	declarations: [AppComponent, COMPONENTS],
 	bootstrap: [AppComponent]
 })
